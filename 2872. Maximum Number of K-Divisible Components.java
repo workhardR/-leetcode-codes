@@ -1,0 +1,26 @@
+class Solution {
+    int ans = 0;
+    public int maxKDivisibleComponents(int n, int[][] edges, int[] values, int k) {
+        List<List<Integer>> g = new ArrayList<>();
+        for (int i = 0; i < n; i++) g.add(new ArrayList<>());
+        for (int[] e : edges) {
+            g.get(e[0]).add(e[1]);
+            g.get(e[1]).add(e[0]);
+        }
+        dfs(0, -1, g, values, k);
+        return ans;
+    }
+    long dfs(int u, int p, List<List<Integer>> g, int[] values, int k) {
+        long sum = values[u];
+        for (int v : g.get(u)) {
+            if (v == p) continue;
+            long s = dfs(v, u, g, values, k);
+            sum += s;
+        }
+        if (sum % k == 0) {
+            ans++;
+            return 0;
+        }
+        return sum;
+    }
+}
